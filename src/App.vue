@@ -1,5 +1,5 @@
 <script setup>
-import UserForm from './components/UserForm.vue';
+import ComponentContainer from './components/ComponentContainer.vue';
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 </script>
@@ -10,9 +10,7 @@ import UserForm from './components/UserForm.vue';
       <a href="https://vitejs.dev" target="_blank">Vite</a>
       <a href="https://vuejs.org/" target="_blank">Vue</a>
     </div>
-    <div class="content">
-      <UserForm></UserForm>
-    </div>
+    <ComponentContainer></ComponentContainer>
   </div>
 </template>
 
