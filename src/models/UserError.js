@@ -6,16 +6,25 @@ export default class UserError{
         this.isMale = []
     }
     addErrorToName(error){
-        this.name.append(error)
+        this.name.push(error)
     }
     addErrorToEmail(error){
-        console.log(error)
-        this.email.append(error)
+        this.email.push(error)
     }
     addErrorToDob(error){
-        this.dob.append(error)
+        this.dob.push(error)
     }
     addErrorToIsMale(error){
-        this.isMale.append(error)
+        this.isMale.push(error)
+    }
+    hasErrors(){
+        if( this.name.length == 0 
+            && this.email.length == 0 
+            && this.dob.length == 0 
+            && this.isMale.length == 0)
+        {
+            return false
+        }
+        return true
     }
 }
