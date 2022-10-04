@@ -18,5 +18,7 @@ export default function UserValidator(user) {
     if(isEmptyValidator(user.dob)) errors.addErrorToDob('Date of birth is empty')  
 
     //sex
-    if(isEmptyValidator(user.sex)) errors.addErrorToSex('Sex is empty')
+    if(isEmptyValidator(user.isMale)) errors.addErrorToIsMale('Sex is empty')
+
+    return errors
 }
