@@ -4,7 +4,7 @@
         <span>{{user.email}}</span>
         <span>{{user.dob}}</span>
         <span>{{sexString}}</span>
-        <button @click="editUser()">Edit</button>
+        <input type="button" @click="editUser()" value="Edit user"/>
     </div>
 </template>
 
@@ -24,6 +24,9 @@
                 this.$emit('editing-user')
             }
         },
+        emits:[
+            'editing-user'
+        ]
     }
 </script>
 
@@ -37,11 +40,7 @@
     border-radius: 4px;
     width: 250px;
 }
-button{
-    border: white solid 0.5px;
-}
-button:hover{
-    background-color: gray;
-    color: black;
+input{
+    height: 30px;
 }
 </style>

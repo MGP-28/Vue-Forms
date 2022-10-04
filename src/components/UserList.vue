@@ -19,6 +19,9 @@ import UserCard from './UserCard.vue';
             this.$emit('editing-user', idx)
         }
     },
+    emits:[
+        'editing-user'
+    ],
     components: { UserCard }
 }
 </script>
