@@ -12,6 +12,7 @@
                         placeholder="Insert your name here" 
                         v-model="user.name"
                         required
+                        :class="hasErrorClass('name')"
                     >
                 </div>
                 <span v-if="errors.hasErrors()" v-for="error in errors.name">{{error}}</span>
@@ -25,6 +26,7 @@
                         placeholder="example@site.com" 
                         v-model="user.email"
                         required
+                        :class="hasErrorClass('email')"
                     >
                 </div>
                 <span v-if="errors.hasErrors()" v-for="error in errors.email">{{error}}</span>
@@ -37,6 +39,7 @@
                         id="dob" 
                         v-model="user.dob"
                         required
+                        :class="hasErrorClass('dob')"
                     >
                 </div>
                 <span v-if="errors.hasErrors()" v-for="error in errors.dob">{{error}}</span>
@@ -58,7 +61,7 @@
                             type="radio" 
                             name="sex" 
                             id="sex_male" 
-                            value="true" 
+                            value="true"
                             v-model="user.isMale"
                             required
                         >
@@ -69,7 +72,7 @@
                             type="radio" 
                             name="sex" 
                             id="sex_female" 
-                            value="false" 
+                            value="false"
                             v-model="user.isMale"
                             required
                         >
@@ -87,62 +90,94 @@
             </div>
         </form>
     </div>
+    <Toast v-if="toast.isEnabled" :text="toast.text" :isNice="!toast.isError" :timer="toast.timer"></Toast>
 </template>
 
 <script>
     import User from "../models/User";
     import UserError from "../models/UserError";
     import UserValidator from "../validators/UserValidator";
+import Toast from "./Toast.vue";
     export default {
-        name: "UserFrom",
-        props:[
-            'userToEdit'
-        ],
-        data(){
-            return {
-                user: new User(),
-                errors: new UserError(),
-                isEditing: false
+    name: "UserFrom",
+    props: [
+        "userToEdit"
+    ],
+    data() {
+        return {
+            user: new User(),
+            errors: new UserError(),
+            isEditing: false,
+            toast: {
+                isEnabled: false,
+                text: '',
+                isError: false,
+                timer: 5
             }
+        };
+    },
+    emits:[
+        'new-user', 'edited-user'
+    ],
+    methods: {
+        submitHandler() {
+            //validates user
+            if (!this.getErrors(this.user)){
+
+                return;
+            }
+            //Submits user to the list and clears form
+            this.$emit("new-user", this.user);
+            this.clearUser();
+            this.toastConfirmationUserAdded();
         },
-        methods:{
-            submitHandler(){
-                //validates user
-                if(!this.getErrors(this.user)) return
-
-                //Submits user to the list and clears form
-                this.$emit('new-user', this.user)
-                this.clearUser()
-            },
-            editHandler(){
-                //validates user
-                if(!this.getErrors(this.user)) return
-
-                //Submits edited user
-                this.$emit('edited-user', this.user)
-                this.isEditing = false
-                this.clearUser()
-            },
-            getErrors(){
-                //validate and return all errors
-                this.errors = UserValidator(this.user)
-
-                //if there's errors, returns false
-                if(this.errors.hasErrors()) return false
-                return true
-            },
-            clearUser(){
-                this.user = new User()
-            }
+        editHandler() {
+            //validates user
+            if (!this.getErrors(this.user))
+                return;
+            //Submits edited user
+            this.$emit("edited-user", this.user);
+            this.isEditing = false;
+            this.clearUser();
         },
-        watch:{
-            userToEdit(){
-                this.isEditing = true
-                this.clearUser()
-                this.user = this.userToEdit.user
-            }
+        getErrors() {
+            //validate and return all errors
+            this.errors = UserValidator(this.user);
+            //if there's errors, returns false
+            if (this.errors.hasErrors())
+                return false;
+            return true;
+        },
+        toastConfirmationUserAdded(){
+            this.toast.text = 'User added!'
+            this.toast.isEnabled = true;
+            setTimeout(() => {
+                this.toast.isEnabled = false;
+            }, this.toast.timer*1000)
+        },
+        clearUser() {
+            this.user = new User();
+        },
+        hasErrorClass(term) {
+            return this.errors[term].length > 0 ? "error" : "";
         }
-    }
+    },
+    watch: {
+        userToEdit() {
+            this.isEditing = true;
+            this.clearUser();
+            this.user = this.userToEdit.user;
+        },
+        "user.isMale"() {
+            //only continues if a valid value isn't already assigned
+            if (this.user.isMale === true || this.user.isMale === false)
+                return;
+            this.user.isMale = (this.user.isMale == "true") ? true
+                : (this.user.isMale == "false") ? false : null;
+        }
+    },
+    components: { Toast }
+}
 </script>
 
 <style scoped>
@@ -187,5 +222,8 @@ input:not([type='radio']){
 }
 input.inv-btn{
     display: none;
+}
+.error{
+    box-shadow: red 0 0 5px 1px;
 }
 </style>
