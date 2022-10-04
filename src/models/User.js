@@ -1,8 +1,8 @@
 export default class User{
     constructor(){
-        this.name = ''
-        this.email = ''
-        this.dob = new Date()
-        this.isMale = true
+        this.name = null
+        this.email = null
+        this.dob = null
+        this.isMale = null
     }
 }
