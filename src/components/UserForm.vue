@@ -5,37 +5,84 @@
                 <!-- name -->
                 <label>Name</label>
                 <div class="field">
-                    <input type="text" name="name" id="name" placeholder="Insert your name here" v-model="user.name">
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name" 
+                        placeholder="Insert your name here" 
+                        v-model="user.name"
+                        required
+                    >
                 </div>
-                <span v-if="aaa" v-for="error in errors.name">{{error}}</span>
+                <span v-if="errors.hasErrors()" v-for="error in errors.name">{{error}}</span>
                 <!-- email -->
                 <label>E-mail</label>
                 <div class="field">
-                    <input type="email" name="email" id="email" placeholder="example@site.com" v-model="user.email">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        placeholder="example@site.com" 
+                        v-model="user.email"
+                        required
+                    >
                 </div>
-                <span v-if="aaa" v-for="error in errors.email">{{error}}</span>
+                <span v-if="errors.hasErrors()" v-for="error in errors.email">{{error}}</span>
                 <!-- dob -->
                 <label>Date of birth</label>
                 <div class="field">
-                    <input type="date" name="dob" id="dob" placeholder="01-01-2000" v-model="user.date">
+                    <input 
+                        type="date" 
+                        name="dob" 
+                        id="dob" 
+                        v-model="user.dob"
+                        required
+                    >
                 </div>
-                <span v-if="aaa" v-for="error in errors.dob">{{error}}</span>
+                <span v-if="errors.hasErrors()" v-for="error in errors.dob">{{error}}</span>
                 <!-- sex -->
                 <label>Sex</label>
                 <div class="field radio-btns">
+                    <input
+                        type="radio" 
+                        name="sex" 
+                        id="sex_null" 
+                        value="null" 
+                        v-model="user.isMale"
+                        checked 
+                        required
+                        class="inv-btn" 
+                    >
                     <div>
-                        <input type="radio" name="sex" id="sex_male" value="true" v-model="user.isMale">
+                        <input 
+                            type="radio" 
+                            name="sex" 
+                            id="sex_male" 
+                            value="true" 
+                            v-model="user.isMale"
+                            required
+                        >
                         <label>Male</label>
                     </div>
                     <div>
-                        <input type="radio" name="sex" id="sex_female" value="false" v-model="user.isMale">
+                        <input 
+                            type="radio" 
+                            name="sex" 
+                            id="sex_female" 
+                            value="false" 
+                            v-model="user.isMale"
+                            required
+                        >
                         <label>Female</label>
                     </div>
                 </div>
-                <span v-if="aaa" v-for="error in errors.sex">{{error}}</span>
+                <span v-if="errors.hasErrors()" v-for="error in errors.isMale">{{error}}</span>
             </div>
-            <div class="buttons">
-                <input type="submit" value="Submit">
+            <div class="buttons" v-if="isEditing">
+                <input type="button" value="Save user" @click="editHandler">
+            </div>
+            <div class="buttons" v-else>
+                <input type="submit" value="Add user">
                 <input type="reset" value="Clear">
             </div>
         </form>
@@ -48,25 +95,53 @@
     import UserValidator from "../validators/UserValidator";
     export default {
         name: "UserFrom",
+        props:[
+            'userToEdit'
+        ],
         data(){
             return {
-                aaa: false,
                 user: new User(),
-                errors: new UserError()
+                errors: new UserError(),
+                isEditing: false
             }
         },
         methods:{
             submitHandler(){
+                //validates user
+                if(!this.getErrors(this.user)) return
+
+                //Submits user to the list and clears form
+                this.$emit('new-user', this.user)
+                this.clearUser()
+            },
+            editHandler(){
+                //validates user
+                if(!this.getErrors(this.user)) return
+
+                //Submits edited user
+                this.$emit('edited-user', this.user)
+                this.isEditing = false
+                this.clearUser()
+            },
+            getErrors(){
+                //validate and return all errors
                 this.errors = UserValidator(this.user)
-                console.log(this.errors)
+
+                //if there's errors, returns false
+                if(this.errors.hasErrors()) return false
+                return true
+            },
+            clearUser(){
+                this.user = new User()
             }
         },
         watch:{
-            user(){
-                this.error = new UserError()
+            userToEdit(){
+                this.isEditing = true
+                this.clearUser()
+                this.user = this.userToEdit.user
             }
         }
-
     }
 </script>
 
@@ -75,6 +150,7 @@ form{
     display: flex;
     flex-direction: column;
     gap: 25px;
+    max-width: max-content;
 }
 .fields{
     display: grid;
@@ -108,5 +184,8 @@ input:not([type='radio']){
     grid-column: span 2;
     display: flex;
     gap: 20px;
+}
+input.inv-btn{
+    display: none;
 }
 </style>
