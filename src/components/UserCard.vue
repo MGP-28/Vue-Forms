@@ -1,5 +1,8 @@
 <template>
     <div class="user-card">
+        <div class="user-img-container" v-if="user.image">
+            <img class="user-img" :src="user.image">
+        </div>
         <span>{{user.name}}</span>
         <span>{{user.email}}</span>
         <span>{{user.dob}}</span>
@@ -39,6 +42,15 @@
     padding: 20px;
     border-radius: 4px;
     width: 250px;
+}
+.user-img-container{
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+.user-img{
+    width: 100%;
+    height: 100%;
 }
 input{
     height: 30px;
