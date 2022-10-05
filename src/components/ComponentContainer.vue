@@ -39,9 +39,16 @@ import UserList from './UserList.vue';
         },
         localStorageGetUsers(){
             const users = JSON.parse(localStorage.getItem('users'));
+            if(!users) return
             users.forEach(user => {
                 this.users.push(
-                    new User(user.name, user.email, user.dob, user.isMale)
+                    new User(
+                        user.name, 
+                        user.email, 
+                        user.dob, 
+                        user.isMale,
+                        user.image
+                    )
                 )
             });
         }
