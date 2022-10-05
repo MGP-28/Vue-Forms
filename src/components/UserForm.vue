@@ -1,7 +1,21 @@
 <template>
     <div class="form-container">
-        <form @submit.prevent="submitHandler()">
+        <form @submit.prevent="submitHandler($event)" ref="userForm">
             <div class="fields">
+                <!-- image -->
+                <label>Thumbnail</label>
+                <div class="field img-field">
+                    <input 
+                        type="file" 
+                        name="img" 
+                        id="img" 
+                        accept="image/*"
+                        @change="saveImage($event)"
+                    >
+                    <div class="user-img-container" v-if="user.image">
+                        <img class="user-img" :src="user.image">
+                    </div>
+                </div>
                 <!-- name -->
                 <label>Name</label>
                 <div class="field">
@@ -82,7 +96,7 @@
                 <span v-if="errors.hasErrors()" v-for="error in errors.isMale">{{error}}</span>
             </div>
             <div class="buttons" v-if="isEditing">
-                <input type="button" value="Save user" @click="editHandler">
+                <input type="button" value="Save user" @click="editHandler($event)">
             </div>
             <div class="buttons" v-else>
                 <input type="submit" value="Add user">
@@ -122,10 +136,7 @@ import Toast from "./Toast.vue";
     methods: {
         submitHandler() {
             //validates user
-            if (!this.getErrors(this.user)){
-
-                return;
-            }
+            if (!this.getErrors(this.user)) return;
             //Submits user to the list and clears form
             this.$emit("new-user", this.user);
             this.clearUser();
@@ -157,15 +168,27 @@ import Toast from "./Toast.vue";
         },
         clearUser() {
             this.user = new User();
+            this.clearInputs();
+        },
+        clearInputs(){
+            this.$refs.userForm.reset()
         },
         hasErrorClass(term) {
             return this.errors[term].length > 0 ? "error" : "";
+        },
+        saveImage(e){
+            const reader = new FileReader();
+            reader.addEventListener("load", () => {
+                this.user.image = reader.result
+            })
+            reader.readAsDataURL(e.target.files[0])
         }
     },
     watch: {
         userToEdit() {
             this.isEditing = true;
             this.clearUser();
+            this.clearInputs();
             this.user = this.userToEdit.user;
         },
         "user.isMale"() {
@@ -196,6 +219,22 @@ form{
 }
 .fields>.field{
     width: 100%;
+}
+.field.img-field{
+    display: grid;
+    gap: 10px;
+}
+.fields input[type='file']{
+    padding: 4px 0 0 0;
+}
+.user-img-container{
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+.user-img{
+    width: 100%;
+    height: 100%;
 }
 input:not([type='radio']){
     width: 100%;
