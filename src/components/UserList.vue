@@ -29,7 +29,7 @@ import UserCard from './UserCard.vue';
 <style scoped>
 .user-card-container{
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     justify-content: center;
     gap: 50px;
     max-width: 1200px;
