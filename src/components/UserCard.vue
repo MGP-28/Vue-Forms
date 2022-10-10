@@ -42,6 +42,7 @@
     padding: 20px;
     border-radius: 4px;
     width: 250px;
+    place-items: center;
 }
 .user-img-container{
     width: 100%;
@@ -54,5 +55,8 @@
 }
 input{
     height: 30px;
+}
+span{
+    height: max-content;
 }
 </style>

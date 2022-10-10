@@ -27,4 +27,7 @@ export default class UserError{
         }
         return true
     }
+    hasErrorsTerm(term){
+        return this[term].length > 0;
+    }
 }

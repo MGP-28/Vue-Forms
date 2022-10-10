@@ -1,5 +1,5 @@
 <template>
-    <div class="content">
+    <div class="content-grid">
       <UserForm @new-user="newUser($event)" :userToEdit="userToEdit" @edited-user="editedUser($event)"></UserForm>
       <UserList v-if="users.length > 0" :users="users" @editing-user="editingUser($event)"></UserList>
     </div>
@@ -66,5 +66,8 @@ import UserList from './UserList.vue';
 </script>
 
 <style scoped>
-
+.content-grid{
+    display: grid;
+    gap: 50px;
+}
 </style>
