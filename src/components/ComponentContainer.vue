@@ -66,9 +66,5 @@ import UserList from './UserList.vue';
 </script>
 
 <style scoped>
-.content{
-  display: grid;
-  place-items: center;
-  gap: 50px;
-}
+
 </style>

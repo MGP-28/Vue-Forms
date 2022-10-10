@@ -1,17 +1,18 @@
 <script setup>
 import ComponentContainer from './components/ComponentContainer.vue';
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+import MainLayout from './layouts/mainLayout.vue';
 </script>
 
 <template>
-  <div style="position: relative">
-    <div class="vite-vue-links">
+  <MainLayout>
+    <template #vuelinks>
       <a href="https://vitejs.dev" target="_blank">Vite</a>
       <a href="https://vuejs.org/" target="_blank">Vue</a>
-    </div>
-    <ComponentContainer></ComponentContainer>
-  </div>
+    </template>
+    <template #content>
+      <ComponentContainer></ComponentContainer>
+    </template>
+  </MainLayout>
 </template>
 
 <style scoped>
