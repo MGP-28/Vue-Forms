@@ -1,9 +1,10 @@
 export default class User{
-    constructor(name = null, email = null, dob = null, isMale = null, image = null){
-        this.name = name
-        this.email = email
-        this.dob = dob
-        this.isMale = isMale
-        this.image = image
+    constructor(user = null){
+        if(user == null) return
+        this.name = user.name
+        this.email = user.email
+        this.dob = user.dob
+        this.isMale = user.isMale
+        this.image = user.image
     }
 }

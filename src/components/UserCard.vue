@@ -15,6 +15,7 @@
 import { mapActions } from 'pinia'
 import { userToEdit } from '../store/UserToEdit'
 import { userList } from '../store/userList'
+import User from '../models/User'
 
     export default {
         name:"UserCard",
@@ -39,7 +40,7 @@ import { userList } from '../store/userList'
             //// not user rn /\
             
             editUser(){
-                this.startEditing(this.user, this.idx)
+                this.startEditing(new User(this.user), this.idx)
             }
         },
         computed: {

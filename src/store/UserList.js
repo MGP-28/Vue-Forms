@@ -28,11 +28,7 @@ export const userList = defineStore('userList', {
             users.forEach(user => {
                 this.users.push(
                     new User(
-                        user.name, 
-                        user.email, 
-                        user.dob, 
-                        user.isMale,
-                        user.image
+                        user
                     )
                 )
             });
