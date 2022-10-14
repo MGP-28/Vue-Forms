@@ -12,6 +12,10 @@
 </template>
 
 <script>
+import { mapActions, mapState, mapStores } from 'pinia'
+import { userToEdit } from '../store/UserToEdit'
+import { userList } from '../store/userList'
+
     export default {
         name:"UserCard",
         props: [
@@ -23,18 +27,25 @@
             }
         },
         methods: {
+            ...mapActions(userToEdit, [
+                'startEditing'
+            ]),
+
+            //// not user rn \/
+            ...mapActions(userList, [
+                'removeUser'
+            ]),
+            //// not user rn /\
+            
             editUser(){
-                this.$emit('editing-user')
+                this.startEditing(this.user)
             }
         },
         computed: {
             imageUrl(){
                 return (this.user.image) ? this.user.image : 'https://media.tenor.com/IHdlTRsmcS4AAAAC/404.gif'
             }
-        },
-        emits:[
-            'editing-user'
-        ]
+        }
     }
 </script>
 
