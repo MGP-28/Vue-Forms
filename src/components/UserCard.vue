@@ -1,7 +1,7 @@
 <template>
     <div class="user-card">
-        <div class="user-img-container" v-if="user.image">
-            <img class="user-img" :src="user.image">
+        <div class="user-img-container">
+            <img class="user-img" :src="imageUrl">
         </div>
         <span>{{user.name}}</span>
         <span>{{user.email}}</span>
@@ -25,6 +25,11 @@
         methods: {
             editUser(){
                 this.$emit('editing-user')
+            }
+        },
+        computed: {
+            imageUrl(){
+                return (this.user.image) ? this.user.image : 'https://media.tenor.com/IHdlTRsmcS4AAAAC/404.gif'
             }
         },
         emits:[

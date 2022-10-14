@@ -177,7 +177,7 @@ export default {
             this.clearInputs(event);
         },
         clearInputs(event){
-            event.target.reset()
+            if(event) event.target.reset()
         },
         hasErrorClass(term) {
             return this.errors[term].length > 0 ? "error" : "";
