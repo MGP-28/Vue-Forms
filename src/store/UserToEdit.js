@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
+import User from '../models/User'
 
-export const userToEdit = defineStore('userList', {
+export const userToEdit = defineStore('userToEdit', {
     state: () => ({ userToEdit: {
             user: null,
             idx: null
@@ -11,13 +12,14 @@ export const userToEdit = defineStore('userList', {
         //name: (param) => instructions
     },
     actions: {
-        startEditing(userBeingEdited){
-            this.userToEdit = userBeingEdited
+        startEditing(userBeingEdited, idx){
+            this.userToEdit.user = userBeingEdited
+            this.userToEdit.idx = idx
             this.isEditing = true
         },
         finishEditing(){
             this.userToEdit = {
-                user: null,
+                user: new User(),
                 idx: null
             },
             this.isEditing = false
