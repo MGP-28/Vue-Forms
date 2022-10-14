@@ -1,7 +1,7 @@
 <template>
     <div class="user-card-container">
         <UserCard 
-            v-for="(user, idx) in usersLocal" :user="user" :key="idx" :idx="idx"
+            v-for="(user, idx) in users" :user="user" :key="idx" :idx="idx"
         ></UserCard>
     </div>
 </template>
@@ -16,7 +16,7 @@ import UserCard from './UserCard.vue';
     name: "UserList",
     data() {
         return {
-            usersLocal: [],
+            //usersLocal: [],
         }
     },
     computed:{
@@ -29,16 +29,16 @@ import UserCard from './UserCard.vue';
             'getUsersFromLC'
         ]),
         reverseUserList(){
-            this.usersLocal = this.users
+            this.usersLocal = [...this.users]
             this.usersLocal.reverse()
         }
     },
     created(){
         this.getUsersFromLC()
-        this.reverseUserList()
+        //this.reverseUserList()
     },
     updated() {
-        this.reverseUserList()
+        //this.reverseUserList()
     },
     components: { UserCard }
 }
