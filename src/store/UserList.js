@@ -13,7 +13,7 @@ export const userList = defineStore('userList', {
             this.saveUsersToLC()
         },
         replaceUser(idx, newUser){
-            this.users[idx] = newUser
+            this.users[idx] = new User(newUser)
             this.saveUsersToLC()
         },
         removeUser(idx){
