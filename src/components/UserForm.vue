@@ -94,9 +94,9 @@
             <ErrorFormField v-if="errors.hasErrorsTerm('isMale')" :errors="errors.isMale"></ErrorFormField>
         </template>
         <template #buttons>
-            <input v-if="isEditing" type="button" value="Save user" @click="editHandler($event)">
             <input v-if="!isEditing" type="submit" value="Add user">
             <input v-if="!isEditing" type="reset" value="Clear">
+            <input v-if="isEditing" type="button" value="Save user" @click="editHandler($event)">
         </template>
         <template #extras>
             <Toast v-if="toast.isEnabled" :text="toast.text" :isNice="!toast.isError" :timer="toast.timer"></Toast>
@@ -105,22 +105,23 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'pinia'
+import { userToEdit } from '../store/UserToEdit'
+import { userList } from '../store/UserList'
+
 import User from "../models/User";
 import UserError from "../models/UserError";
 import UserValidator from "../validators/UserValidator";
 import Toast from "./Toast.vue";
 import Form from "./Generic/Form.vue";
 import ErrorFormField from "./Form/Error.vue";
+
 export default {
     name: "UserFrom",
-    props: [
-        "userToEdit"
-    ],
     data() {
         return {
             user: new User(),
             errors: new UserError(),
-            isEditing: false,
             toast: {
                 isEnabled: false,
                 text: '',
@@ -133,16 +134,27 @@ export default {
     mounted() {
         this.isLoaded = true
     },
-    emits:[
-        'new-user', 'edited-user'
-    ],
+    computed:{
+        ...mapState(userToEdit, [
+            'userToEdit',
+            'isEditing'
+        ])
+    },
     methods: {
+        ...mapActions(userToEdit, [
+            'startEditing',
+            'finishEditing'
+        ]),
+        ...mapActions(userList, [
+            'addUser',
+            'replaceUser'
+        ]),
         submitHandler(event) {
             //validates user
             if (!this.getErrors(this.user)) return;
             //Submits user to the list and clears form
-            this.$emit("new-user", this.user);
-            this.clearUser(event);
+            this.addUser(this.user)
+            this.clearUser(event)
             this.toastConfirmationUserAdded();
         },
         resetHandler(event) {
@@ -153,9 +165,9 @@ export default {
             if (!this.getErrors(this.user))
                 return;
             //Submits edited user
-            this.$emit("edited-user", this.user);
-            this.isEditing = false;
-            this.clearUser();
+            this.replaceUser(this.userToEdit.idx, this.user)    //add to user list store
+            this.finishEditing()                                //reset edited user store
+            this.clearUser()
         },
         getErrors() {
             //validate and return all errors
@@ -191,17 +203,20 @@ export default {
         }
     },
     watch: {
-        userToEdit() {
-            this.isEditing = true;
-            this.clearUser();
-            this.clearInputs();
-            this.user = this.userToEdit.user;
+        "userToEdit.user"() {
+            if(this.isEditing){
+                this.clearUser();
+                this.clearInputs();
+                this.user = this.userToEdit.user;
+            }
         },
         "user.isMale"() {
+            if(!this.user) return
             //only continues if a valid value isn't already assigned
             if (this.user.isMale === true || this.user.isMale === false)
                 return;
-            this.user.isMale = (this.user.isMale == "true") ? true
+            this.user.isMale = (this.user.isMale == "true") 
+                ? true
                 : (this.user.isMale == "false") ? false : null;
         }
     },
