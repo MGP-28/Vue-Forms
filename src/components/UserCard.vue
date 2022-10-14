@@ -12,14 +12,15 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapStores } from 'pinia'
+import { mapActions } from 'pinia'
 import { userToEdit } from '../store/UserToEdit'
 import { userList } from '../store/userList'
 
     export default {
         name:"UserCard",
         props: [
-            'user'
+            'user',
+            'idx'
         ],
         computed: {
             sexString(){
@@ -38,7 +39,7 @@ import { userList } from '../store/userList'
             //// not user rn /\
             
             editUser(){
-                this.startEditing(this.user)
+                this.startEditing(this.user, this.idx)
             }
         },
         computed: {
