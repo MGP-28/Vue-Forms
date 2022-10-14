@@ -5,7 +5,7 @@ import User from '../models/User'
 export const userList = defineStore('userList', {
     state: () => ({ users: [] }),
     getters: {
-        getUser: (idx) => JSON.parse(JSON.stringify(this.users[idx]))
+        //getUser: (idx) => JSON.parse(JSON.stringify(this.users[idx]))
     },
     actions: {
         addUser(user){
