@@ -1,18 +1,19 @@
 <template>
-    <div class="user-card">
+    <div class="user-card" :class="(isBeingEdited ? 'editing' : '')">
+        <span v-if="isBeingEdited" class="pulsing-text">Being edited...</span>
         <div class="user-img-container">
             <img class="user-img" :src="imageUrl">
         </div>
         <span>{{user.name}}</span>
         <span>{{user.email}}</span>
         <span>{{user.dob}}</span>
-        <span>{{sexString}}</span>
+        <span>{{ sexString() }}</span>
         <input type="button" @click="editUser()" value="Edit user"/>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import { userToEdit } from '../store/UserToEdit'
 import { userList } from '../store/userList'
 import User from '../models/User'
@@ -23,12 +24,30 @@ import User from '../models/User'
             'user',
             'idx'
         ],
-        computed: {
-            sexString(){
-                return (this.user.isMale) ? 'Male' : 'Female'
+        data() {
+            return {
+                isBeingEdited: false
             }
         },
+        computed: {
+            ...mapState(userToEdit, [
+                'userToEdit',
+                'isEditing'
+            ]),
+
+            //// Not working ??? \/
+            // sexString() {
+            //     return this.user.isMale ? 'Male' : 'Female'
+            // },
+            // isBeingEdited() {
+            //     return this.userToEdit.idx == this.idx
+            // }
+            //// Not working ??? /\
+        },
         methods: {
+            sexString() {
+                return this.user.isMale ? 'Male' : 'Female'
+            },
             ...mapActions(userToEdit, [
                 'startEditing'
             ]),
@@ -41,11 +60,29 @@ import User from '../models/User'
             
             editUser(){
                 this.startEditing(new User(this.user), this.idx)
+                this.enableBeingEdited()
+            },
+            enableBeingEdited() {
+                this.isBeingEdited = true
+            },
+            disableBeingEdited() {
+                this.isBeingEdited = false
+            },
+            editingHandler(){
+                
             }
         },
         computed: {
             imageUrl(){
                 return (this.user.image) ? this.user.image : 'https://media.tenor.com/IHdlTRsmcS4AAAAC/404.gif'
+            }
+        },
+        watch: {
+            user:{
+                handler(){
+                    this.disableBeingEdited()
+                },
+                deep: true
             }
         }
     }
@@ -76,5 +113,19 @@ input{
 }
 span{
     height: max-content;
+}
+.editing{
+    border: red solid 1px;
+}
+@keyframes pulsingText{
+    0% {  }
+    50% { transform: scale(1.2); }
+    100% {  }
+}
+.pulsing-text{
+    animation-name: pulsingText;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 </style>

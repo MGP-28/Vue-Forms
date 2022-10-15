@@ -97,6 +97,7 @@
             <input v-if="!isEditing" type="submit" value="Add user">
             <input v-if="!isEditing" type="reset" value="Clear">
             <input v-if="isEditing" type="button" value="Save user" @click="editHandler($event)">
+            <input v-if="isEditing" type="button" value="Cancel" @click="cancelEditing($event)">
         </template>
         <template #extras>
             <Toast v-if="toast.isEnabled" :text="toast.text" :isNice="!toast.isError" :timer="toast.timer"></Toast>
@@ -169,6 +170,10 @@ export default {
             this.finishEditing()                                //reset edited user store
             this.clearUser()
         },
+        cancelEditing(){
+            this.user = new User(this.userToEdit.user);
+            this.editHandler()
+        },
         getErrors() {
             //validate and return all errors
             this.errors = UserValidator(this.user);
@@ -207,7 +212,7 @@ export default {
             if(this.isEditing){
                 this.clearUser();
                 this.clearInputs();
-                this.user = this.userToEdit.user;
+                this.user = new User(this.userToEdit.user);
             }
         },
         "user.isMale"() {

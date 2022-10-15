@@ -18,11 +18,11 @@ export const userToEdit = defineStore('userToEdit', {
             this.isEditing = true
         },
         finishEditing(){
+            this.isEditing = false
             this.userToEdit = {
                 user: new User(),
                 idx: null
-            },
-            this.isEditing = false
+            }
         }
     }
 })
